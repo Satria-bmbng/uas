@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Manajemen Mahasiswa</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1> Manajemen Mahasiswa</h1>
+  <div class="nav">
+    <button onclick="showInput()">Input</button>
+    <button onclick="showData()">Data</button>
+    <button id="themeToggle">🌙</button>
+  </div>
+</header>
+
+<div class="toast-container" id="toast"></div>
+
+<div class="container">
+
+<!-- INPUT -->
+<section id="inputSection" class="card">
+  <h2 id="formTitle">Input Mahasiswa</h2>
+
+  <form id="mahasiswaForm">
+    <input id="nim" placeholder="NIM (12 Digit)" required>
+    <input id="nama" placeholder="Nama Lengkap" required>
+
+    <select id="prodi">
+      <option>Teknik Informatika</option>
+      <option>Sistem Informasi</option>
+      <option>Manajemen Informatika</option>
+      <option>Ilmu Komputer</option>
+    </select>
+
+    <button type="submit">Simpan</button>
+  </form>
+</section>
+
+<!-- DATA -->
+<section id="dataSection" class="card" style="display:none">
+  <h2>Data Mahasiswa</h2>
+
+  <div class="toolbar">
+    <input id="searchNIM" placeholder=" Cari NIM..." oninput="searchData()">
+
+    <select id="sortSelect">
+      <option value="">-- Urutkan --</option>
+      <option value="bubble">Bubble Sort (Nama)</option>
+      <option value="merge">Merge Sort (Nama)</option>
+    </select>
+
+    <button onclick="sortData()">Urutkan</button>
+    <button onclick="exportCSV()">Export CSV</button>
+    <button onclick="exportExcel()">Export Excel</button>
+
+   <label class="import-btn">
+  Import CSV / Excel
+  <input type="file"
+         accept=".csv,.xls,.xlsx"
+         onchange="importFile(event)">
+</label>
+
+<!-- LIBRARY EXCEL -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>NIM</th>
+        <th>Nama</th>
+        <th>Program Studi</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</section>
+
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

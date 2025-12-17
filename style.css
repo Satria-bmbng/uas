@@ -1,0 +1,311 @@
+/* ========================= */
+/*        GLOBAL              */
+/* ========================= */
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg,#eef2ff,#f8fafc);
+  color: #0f172a;
+}
+
+body.dark {
+  background: linear-gradient(135deg,#020617,#0f172a);
+  color: #e5e7eb;
+}
+
+/* ========================= */
+/*        HEADER              */
+/* ========================= */
+header {
+  background: linear-gradient(135deg,#2563eb,#1e40af);
+  color: white;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+body.dark header {
+  background: linear-gradient(135deg,#020617,#020617);
+}
+
+.nav button {
+  background: white;
+  color: #2563eb;
+  border: none;
+  padding: 8px 14px;
+  margin-left: 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#themeToggle {
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+}
+
+/* ========================= */
+/*        LAYOUT              */
+/* ========================= */
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.card {
+  background: white;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 15px 30px rgba(0,0,0,.1);
+  margin-bottom: 25px;
+}
+
+body.dark .card {
+  background: #020617;
+  box-shadow: none;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+/* ========================= */
+/*        FORM                */
+/* ========================= */
+form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+input,
+select {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5f5;
+}
+
+body.dark input,
+body.dark select {
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e40af;
+}
+
+/* ========================= */
+/*        TABLE               */
+/* ========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+  background: #2563eb;
+  color: white;
+}
+
+body.dark th {
+  background: #020617;
+}
+
+body.dark td {
+  border-color: #334155;
+}
+
+/* ========================= */
+/*        ACTION              */
+/* ========================= */
+.edit {
+  background: #16a34a;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.hapus {
+  background: #dc2626;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+/* ========================= */
+/*        TOOLBAR             */
+/* ========================= */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+/* ========================= */
+/*        IMPORT              */
+/* ========================= */
+.import-btn {
+  background: #64748b;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.import-btn input {
+  display: none;
+}
+
+/* ========================= */
+/*        TOAST               */
+/* ========================= */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.toast {
+  padding: 14px 20px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  color: white;
+  animation: fade 3s forwards;
+}
+
+.toast.success { background:#16a34a }
+.toast.info { background:#2563eb }
+.toast.danger { background:#dc2626 }
+
+@keyframes fade {
+  0%{opacity:1}
+  80%{opacity:1}
+  100%{opacity:0}
+}
+
+/* ========================= */
+/*        RESPONSIVE          */
+/* ========================= */
+
+/* TABLET & HP */
+@media (max-width: 768px) {
+
+  header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .container {
+    margin: 20px 12px;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  form {
+    flex-direction: column;
+  }
+
+  input, select, button {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .edit, .hapus {
+    display: inline-block;
+    margin: 4px 2px;
+  }
+
+  .toast-container {
+    left: 10px;
+    right: 10px;
+    top: 10px;
+  }
+
+  .toast {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* HP KECIL */
+@media (max-width: 480px) {
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+  }
+
+  header {
+    padding: 14px;
+  }
+
+  button, .import-btn {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+}
