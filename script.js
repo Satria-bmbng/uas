@@ -1,20 +1,8 @@
-/* ================= DATA ================= */
 let data = JSON.parse(localStorage.getItem("mahasiswa")) || [];
-let tampil = data;
 let editIndex = null;
+let tampil = data;
 
-/* ================= ELEMENT ================= */
-const tableBody = document.getElementById("tableBody");
-const mahasiswaForm = document.getElementById("mahasiswaForm");
-const inputSection = document.getElementById("inputSection");
-const dataSection = document.getElementById("dataSection");
-const formTitle = document.getElementById("formTitle");
-const toastBox = document.getElementById("toast");
-const searchNIM = document.getElementById("searchNIM");
-const sortSelect = document.getElementById("sortSelect");
-const themeToggle = document.getElementById("themeToggle");
-
-/* ================= NAV ================= */
+/* NAV */
 function showInput(){
   inputSection.style.display="block";
   dataSection.style.display="none";
@@ -24,7 +12,7 @@ function showData(){
   dataSection.style.display="block";
 }
 
-/* ================= TOAST ================= */
+/* TOAST */
 function toast(msg,type="info"){
   const t=document.createElement("div");
   t.className="toast "+type;
@@ -32,13 +20,9 @@ function toast(msg,type="info"){
   toastBox.appendChild(t);
   setTimeout(()=>t.remove(),3000);
 }
+const toastBox=document.getElementById("toast");
 
-/* ================= STORAGE ================= */
-function save(){
-  localStorage.setItem("mahasiswa", JSON.stringify(data));
-}
-
-/* ================= RENDER ================= */
+/* RENDER */
 function render(arr=data){
   tampil = arr;
   tableBody.innerHTML = "";
@@ -56,7 +40,8 @@ function render(arr=data){
   });
 }
 
-/* ================= FORM ================= */
+
+/* FORM */
 mahasiswaForm.onsubmit = e => {
   e.preventDefault();
 
@@ -66,40 +51,39 @@ mahasiswaForm.onsubmit = e => {
     prodi: prodi.value
   };
 
-  if(!obj.nim || !obj.nama){
-    toast("Data belum lengkap","danger");
+  // 🔒 CEK NIM SUDAH ADA
+  const nimSudahAda = data.some((m, i) =>
+    m.nim === obj.nim && i !== editIndex
+  );
+
+  if (nimSudahAda) {
+    toast("❌ NIM sudah terdaftar!", "danger");
     return;
   }
 
-  const nimAda = data.some((m,i)=>m.nim===obj.nim && i!==editIndex);
-  if(nimAda){
-    toast("NIM sudah terdaftar","danger");
-    return;
-  }
-
-  if(editIndex === null){
+  if (editIndex === null) {
     data.push(obj);
-    toast("Data ditambahkan","success");
+    toast("✅ Data berhasil ditambahkan", "success");
   } else {
     data[editIndex] = obj;
     editIndex = null;
-    formTitle.textContent="Input Mahasiswa";
-    toast("Data diperbarui","info");
+    formTitle.textContent = "Input Mahasiswa";
+    toast(" Data berhasil diperbarui", "info");
   }
 
   mahasiswaForm.reset();
-  save();
   render();
   showData();
 };
 
-/* ================= CRUD ================= */
+
+/* CRUD */
 function editData(i){
-  const m = data[i];
-  nim.value = m.nim;
-  nama.value = m.nama;
-  prodi.value = m.prodi;
-  editIndex = i;
+  const m=data[i];
+  nim.value=m.nim;
+  nama.value=m.nama;
+  prodi.value=m.prodi;
+  editIndex=i;
   formTitle.textContent="Edit Mahasiswa";
   showInput();
 }
@@ -107,35 +91,31 @@ function editData(i){
 function hapusData(i){
   if(confirm("Hapus data ini?")){
     data.splice(i,1);
-    save();
     render();
     toast("Data dihapus","danger");
   }
 }
 
-/* ================= SEARCH ================= */
+/* SEARCH */
 function searchData(){
-  const k = searchNIM.value.toLowerCase();
+  const k=searchNIM.value.toLowerCase();
   render(data.filter(m=>m.nim.toLowerCase().includes(k)));
 }
 
-/* ================= SORT ================= */
+/* SORT */
 function sortData(){
-  let arr = [...data];
-
+  let arr=[...data];
   if(sortSelect.value==="bubble"){
     for(let i=0;i<arr.length;i++)
       for(let j=0;j<arr.length-i-1;j++)
-        if(arr[j].nama > arr[j+1].nama)
-          [arr[j],arr[j+1]] = [arr[j+1],arr[j]];
+        if(arr[j].nama>arr[j+1].nama)
+          [arr[j],arr[j+1]]=[arr[j+1],arr[j]];
     toast("Bubble Sort diterapkan","success");
   }
-
   if(sortSelect.value==="merge"){
-    arr = mergeSort(arr);
+    arr=mergeSort(arr);
     toast("Merge Sort diterapkan","success");
   }
-
   render(arr);
 }
 
@@ -146,12 +126,12 @@ function mergeSort(a){
 }
 function merge(l,r){
   let res=[];
-  while(l.length && r.length)
-    res.push(l[0].nama<=r[0].nama ? l.shift() : r.shift());
+  while(l.length&&r.length)
+    res.push(l[0].nama<=r[0].nama?l.shift():r.shift());
   return res.concat(l,r);
 }
 
-/* ================= EXPORT ================= */
+/* EXPORT */
 function exportCSV(){
   let csv="NIM,Nama,Prodi\n";
   tampil.forEach(m=>csv+=`${m.nim},${m.nama},${m.prodi}\n`);
@@ -171,7 +151,7 @@ function download(data,file,type){
   a.click();
 }
 
-/* ================= IMPORT (CSV + EXCEL) ================= */
+/* IMPORT */
 function importFile(e){
   const file = e.target.files[0];
   if(!file) return;
@@ -180,75 +160,19 @@ function importFile(e){
 
   if(ext === "csv"){
     importCSV(file);
-  }
-  else if(ext === "xls" || ext === "xlsx"){
+  } else if(ext === "xls" || ext === "xlsx"){
     importExcel(file);
-  }
-  else{
+  } else {
     toast("Format file tidak didukung","danger");
   }
 
   e.target.value = "";
 }
 
-/* ---------- CSV ---------- */
-function importCSV(file){
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const rows=ev.target.result.split("\n").slice(1);
-    let count=0;
 
-    rows.forEach(r=>{
-      const [nim,nama,prodi]=r.split(",");
-      if(nim && nama && prodi){
-        if(!data.some(m=>m.nim===nim.trim())){
-          data.push({
-            nim:nim.trim(),
-            nama:nama.trim(),
-            prodi:prodi.trim()
-          });
-          count++;
-        }
-      }
-    });
 
-    save();
-    render();
-    toast(`Import CSV berhasil (${count} data)`, "success");
-  };
-  reader.readAsText(file);
-}
 
-/* ---------- EXCEL ---------- */
-function importExcel(file){
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const wb=XLSX.read(e.target.result,{type:"binary"});
-    const ws=wb.Sheets[wb.SheetNames[0]];
-    const rows=XLSX.utils.sheet_to_json(ws);
-    let count=0;
-
-    rows.forEach(r=>{
-      const nim=String(r.NIM||r.nim||"").trim();
-      const nama=String(r.Nama||r.nama||"").trim();
-      const prodi=String(r.Prodi||r.prodi||"").trim();
-
-      if(nim && nama && prodi){
-        if(!data.some(m=>m.nim===nim)){
-          data.push({nim,nama,prodi});
-          count++;
-        }
-      }
-    });
-
-    save();
-    render();
-    toast(`Import Excel berhasil (${count} data)`, "success");
-  };
-  reader.readAsBinaryString(file);
-}
-
-/* ================= DARK MODE ================= */
+/* DARK MODE */
 if(localStorage.theme==="dark"){
   document.body.classList.add("dark");
   themeToggle.textContent="☀️";
@@ -260,5 +184,57 @@ themeToggle.onclick=()=>{
   localStorage.theme=d?"dark":"light";
 };
 
-/* ================= INIT ================= */
-document.addEventListener("DOMContentLoaded", render);
+render();
+
+function importCSV(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    const rows = e.target.result.split("\n").slice(1);
+    let count = 0;
+
+    rows.forEach(r=>{
+      const [nim,nama,prodi] = r.split(",");
+      if(nim && nama && prodi){
+        data.push({
+          nim: nim.trim(),
+          nama: nama.trim(),
+          prodi: prodi.trim()
+        });
+        count++;
+      }
+    });
+
+    localStorage.setItem("mahasiswa", JSON.stringify(data));
+    render();
+    toast(`CSV berhasil diimport (${count} data)`, "success");
+  };
+  reader.readAsText(file);
+}
+
+function importExcel(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wb = XLSX.read(e.target.result, { type: "binary" });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws);
+
+    let count = 0;
+
+    rows.forEach(r=>{
+      const nim = String(r.NIM || r.nim || "").trim();
+      const nama = String(r.Nama || r.nama || "").trim();
+      const prodi = String(r.Prodi || r.prodi || "").trim();
+
+      if(nim && nama && prodi){
+        data.push({ nim, nama, prodi });
+        count++;
+      }
+    });
+
+    localStorage.setItem("mahasiswa", JSON.stringify(data));
+    render();
+    toast(`Excel berhasil diimport (${count} data)`, "success");
+  };
+  reader.readAsBinaryString(file);
+}
+
