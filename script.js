@@ -51,6 +51,21 @@ mahasiswaForm.onsubmit = e => {
     prodi: prodi.value
   };
 
+  // 🔒 REGEX VALIDATION
+  const regexNIM  = /^[0-9]+$/;          // hanya angka
+  const regexNama = /^[A-Za-z\s]+$/;     // hanya huruf & spasi
+
+  if (!regexNIM.test(obj.nim)) {
+    toast("❌ NIM hanya boleh berisi angka", "danger");
+    return;
+  }
+
+  if (!regexNama.test(obj.nama)) {
+    toast("❌ Nama hanya boleh huruf A-Z atau a-z", "danger");
+    return;
+  }
+
+
   // 🔒 CEK NIM SUDAH ADA
   const nimSudahAda = data.some((m, i) =>
     m.nim === obj.nim && i !== editIndex
